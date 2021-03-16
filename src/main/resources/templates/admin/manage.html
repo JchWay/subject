@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>管理员界面</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">考勤系统后台管理</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a th:text="${user.uName}" href="javascript:;">用户名</a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a id="profile" href="/admin/profile">基本资料</a>
+                    </dd>
+                    <dd>
+                        <a th:href="@{/to_login}">退出</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">课程管理</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="createcourse" href="/admin/createcourse">新建课程</a>
+                        </dd>
+                        <dd>
+                            <a id="mycourse" href="/admin/courselist">我的课程</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;">学生管理</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="studentlist" href="/admin/studentlist">学生列表</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;">请假管理</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="leavelist" href="/leavelist">假条审批</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a id="qa" href="/posts">问答论坛</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <iframe src="" id="main" width="100%" style="height: 99.9%" frameborder="0"></iframe>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+        var $ = layui.jquery;
+        $(document).ready(function () {
+            $("#profile").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#createcourse").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#location").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#mycourse").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#studentlist").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#leavelist").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#qa").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+    });
+</script>
+</body>
+</html>

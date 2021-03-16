@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>--请假理由--</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+</head>
+<body>
+<form>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">请假理由：</label>
+        <div class="layui-input-block">
+            <textarea name="reason" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="leave">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript">
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+        form.on('submit(leave)', function (data) {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                data: JSON.stringify(data.field),
+                url: "pub_leave",//目标地址
+                success: function (data) {
+                    alert(data.msg);
+                },
+                error: function () {
+                    alert("接受后台数据失败")
+                }
+            });
+            return false;
+        }
+    })
+    })
+</script>
+</body>
+</html>

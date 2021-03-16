@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>--用户信息修改--</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+</head>
+<body>
+<div style="margin-top: 10%;margin-left: 30%;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required" lay-reqtext="用户名是必填项，岂能为空？"
+                           th:value="${user.uName}"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password" lay-verify="required"
+                           th:value="${user.uPassword}"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">绑定邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" lay-verify="email"
+                       th:value="${user.uEmail}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="save">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript">
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+        form.on('submit(save)', function (data) {
+            $.ajax({
+                //async: false,同步，待请求完毕后再执行后面的代码
+                type: "POST",
+                url: '/user/saveuser',
+                contentType: "application/json",
+                data: JSON.stringify(data.field),
+                dataType: "json",//预期服务器返回的数据类型
+                success: function (data) {
+                    if (data.code == 0) {
+                        alert(data.msg);
+                    } else {
+                        alert(data.msg);
+                        window.location.href = "/user/profile";
+                    }
+                },
+                error: function () {
+                    alert("接受后台数据失败")
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>--用户登录/注册--</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+</head>
+<body>
+<div style="margin-top: 10%;margin-left: 30%;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="login">立即登录</button>
+                <a th:href="@{/register}">----新用户注册</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+        form.on('submit(login)', function (data) {
+            $.ajax({
+                //async: false,同步，待请求完毕后再执行后面的代码
+                type: "POST",
+                url: '/do_login',
+                contentType: "application/json",
+                data: JSON.stringify(data.field),
+                dataType: "json",//预期服务器返回的数据类型
+                success: function (data) {
+                    if (data.code == 0) {
+                        alert(data.msg);
+                    } else if (data.code == 1) {
+                        alert(data.msg);
+                        window.location.href = "/admin";
+                    } else {
+                        alert(data.msg);
+                        window.location.href = "/user";
+                    }
+                },
+                error: function () {
+                    alert("接受后台数据失败")
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <title>--可选择的课程--</title>
+</head>
+<body>
+<table class="layui-table" id="coursesList" style="margin-left: 5%;margin-top: 5%">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col width="150">
+    </colgroup>
+    <thead>
+    <tr>
+        <th>课程名称</th>
+        <th>教师邮箱</th>
+        <th>加入课程</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item: ${courseList}">
+        <td th:text="${item.getcName()}"></td>
+        <!--<td><img th:src="@{${item.getcCover()}}" width="200px" height="200px"/></td>-->
+        <td th:text="${item.getcCreater()}"></td>
+        <td>
+            <button class="layui-btn" th:onclick="|select(${item.getcId()})|">点击选课</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    select = function (cid) {
+        var param={
+            "cid":cid
+        }
+        $.ajax({
+            type: "POST",
+            url: "/user/selectcourse",//目标地址
+            contentType: "application/json",
+            data:JSON.stringify(param),
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 1) {
+                    alert(data.msg);
+                }
+                else if (data.code == 0) {
+                    alert(data.msg);
+                }
+
+            },
+            error: function () {
+                alert("接受后台数据失败！");
+            }
+        })}
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>--新建课程--</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+</head>
+<body>
+<div style="margin-top: 10%;margin-left: 30%;">
+    <form class="layui-form layui-form-pane" id="fm" action="" enctype="multipart/form-data">
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">课程名字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="coursename" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传封面</label>
+            <div class="layui-input-block">
+                <input type="file" id="image" name="image" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-block">
+                    <input id="bt" type="text" name="begintime" placeholder="yyyy">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-block">
+                    <input id="et" type="text" name="endtime" placeholder="yyyy">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="save">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript">
+    layui.use(['form', 'jquery', 'laydate',], function () {
+        var form = layui.form,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#bt'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#et'
+            , type: 'datetime'
+        });
+        form.on('submit(save)', function (data) {
+            //console.log(data.field)
+            //parent.layer.msg("2");
+            var formData = new FormData($("#fm")[0]);
+            $.ajax({
+                url : '/admin/savecourse',
+                type : 'post',
+                data : formData,
+                cache:false,
+                contentType: false,
+                processData: false,
+                success : function(data) {
+                    if(data.code==1){
+                        alert(data.msg());
+                    }
+                    if(data.code==0){
+                        alert(data.msg());
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

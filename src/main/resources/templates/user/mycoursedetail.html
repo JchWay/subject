@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <title>--我创建的课程--</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        .info {
+            width: 26rem;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>课程封面</h5>
+                </div>
+                <div>
+                    <div class="ibox-content no-padding border-left-right">
+                        <img th:src="@{${coursedetail.getcCover()}}" width="100%" height="100%"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>课程详情</h5>
+                </div>
+                <div class="ibox-content">
+                    <div>
+                        <div class="ibox-content profile-content">
+                            <h4 th:text="'课程名称:'+${coursedetail.getcName()}"></h4>
+                            <h4 th:text="'教师邮箱:'+${coursedetail.getcCreater()}"></h4>
+                            <h4 th:text="'上课时间:'+${coursedetail.getcBegintime()}"></h4>
+                            <h4 th:text="'下课时间:'+${coursedetail.getcEndtime()}"></h4>
+                            <h4>课程简介</h4>
+                            <p></p>
+                            <div class="row m-t-lg">
+                                <div class="col-sm-4">
+                                    <button id="pa" class="layui-btn"
+                                            th:onclick="|punch(${coursedetail.getcId()})|">打卡
+                                    </button>
+                                    <h4 id="status"></h4>
+                                    <hr>
+                                    <p id="result"></p>
+                                    <hr>
+                                    <!--<p >由于众多浏览器已不再支持非安全域的定位请求，为保位成功率和精度，请升级您的站点到HTTPS。</p><-->
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="layui-btn" th:onclick="|leave(${coursedetail.getcId()})|">请假
+                                    </button>
+                                    <textarea id="reason" placeholder="请输入请假理由" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.15&key=0f58553984d7bcbd55a867c4732338b6"></script>
+<script type="text/javascript">
+    //百度地图https://api.map.baidu.com/location/ip?ak=ZoKGL79MOge770lEK5j2G1OhL4ZSRNRX&coor=bd09ll
+    //腾讯地图https://apis.map.qq.com/ws/location/v1/ip?ip=61.135.17.68&key=CJ3BZ-H3PRR-F3HWD-WETUA-ZTXDT-D7FR2
+    var lon;
+    var la;
+    var map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    AMap.plugin('AMap.Geolocation', function () {
+            var geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 5000,          //超过10秒后停止定位，默认：5s
+            });
+
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+
+        }
+    );
+
+    //解析定位结果
+    function onComplete(data) {
+        document.getElementById('pa').innerHTML = '发布打卡';
+        document.getElementById('status').innerHTML = '定位成功';
+        var arr = data.position.toString().split(",");
+        //向js全局变量传值
+        lon = arr[0];
+        la = arr[1];
+
+        var str = [];
+        str.push('定位结果：' + data.position);
+        str.push('定位类别：' + data.location_type);
+        if (data.accuracy) {
+            str.push('精度：' + data.accuracy + ' 米');
+        }//如为IP精确定位结果则没有精度信息
+        str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+        document.getElementById('result').innerHTML = str.join('<br>');
+    }
+
+    //解析定位错误信息
+    function onError(data) {
+        document.getElementById("pa").disabled = true;
+        document.getElementById('pa').innerHTML = '无法打卡';
+        document.getElementById('status').innerHTML = '定位失败';
+        document.getElementById('result').innerHTML = '失败原因排查信息:' + data.message;
+    }
+
+    leave = function (cid) {
+        var param = {
+            "cid": cid,
+            "lreason": document.getElementById("reason").value
+        }
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            data: param,
+            url: "/pub_leave",//目标地址
+            success: function (data) {
+                alert(data.msg);
+            },
+            error: function () {
+                alert("接受后台数据失败！");
+            }
+        })
+    }
+    punch = function (cid) {
+        var param = {
+            "lon": lon,
+            "la": la,
+            "cid": cid
+        }
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            data: param,
+            url: "/user/punch",//目标地址
+            success: function (data) {
+                alert(data.msg);
+            },
+            error: function () {
+                alert("接受后台数据失败！");
+            }
+        })
+    }
+</script>
+</body>
+</html>

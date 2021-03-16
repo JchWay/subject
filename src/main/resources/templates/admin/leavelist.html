@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <title>--假条列表--</title>
+</head>
+<body>
+
+<table class="layui-hide" id="leaveList"></table>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:inline="none">
+    layui.use(['table'], function () {
+        var table = layui.table;//使用数据表格
+
+        table.render({
+            elem: '#leaveList',//选择html中对应的数据表格ID
+            url: '/showleavelist',//分页提交到spring boot 代码的映射名称
+            method: 'GET',
+            limit: 8,//每页显示的记录数量
+            limits: [5, 8, 10, 15, 20],//可选择每页显示的数量
+            page: true,//开启分页
+
+            //设置表头的数组
+            //field：后台传回的数字字段名，
+            //title：表头文字
+            //templet: function(data){} 数据表格请求后台回调函数，处理数据
+            //return  表示在对应的列中输出的内容
+            cols: [[
+                {field: 'lId', width: 100, title: '假条id'},
+                {field: 'uId', width: 100, title: '学生id'},
+                {field: 'cId', width: 100, title: '课程id'},
+                {field: 'lReason', width: 700, title: '请假理由'},
+                {
+                    fixed: 'right', title: '操作', width: 150,
+                    templet: function (data) {
+                        return "<a onclick='javascript:approvelea(" + data.lId + ")' title='批准' class='layui-btn layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe6af;</icon></a>" +
+                            "<a onclick='javascript:rejectlea(" + data.lId + ")' title='拒绝' class='layui-btn layui-bg-red layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe69c;</icon></a>"
+                    }
+                }
+            ]],
+            done: function (res, curr, count) {
+                console.log("表格渲染完成：");
+                console.log(res);
+                console.log(curr);
+                console.log(count);
+            }
+
+        });
+    });
+    approvelea = function (lid) {
+        var param = {
+            "lid": lid
+        };
+        $.ajax({
+            type: "POST",
+            url: "/approveleave",//目标地址
+            contentType: "application/json",
+            data: JSON.stringify(param),
+            dataType: "json",
+            success: function (data) {
+                alert(data.msg);
+            },
+            error: function () {
+                alert("接受后台数据失败！");
+            }
+        })
+    };
+    rejectlea = function (lid) {
+        var param = {
+            "lid": lid
+        };
+        $.ajax({
+            type: "POST",
+            url: "/rejectleave",//目标地址
+            contentType: "application/json",
+            data: JSON.stringify(param),
+            dataType: "json",
+            success: function (data) {
+                alert(data.msg);
+            },
+            error: function () {
+                alert("接受后台数据失败！");
+            }
+        })
+    }
+</script>
+</body>
+</html>
