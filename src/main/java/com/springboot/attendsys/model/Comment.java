@@ -19,7 +19,6 @@ public class Comment {
     private Comment parentComment;
     private int parentuId;
 
-
     public int getmId() {
         return mId;
     }

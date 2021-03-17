@@ -43,7 +43,7 @@
                     <a href="javascript:;">请假管理</a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;">我的假条</a>
+                            <a id="myleavelist" href="/myleavelist">我的假条</a>
                         </dd>
                     </dl>
                 </li>
@@ -96,6 +96,12 @@
         });
         $(document).ready(function () {
             $("#qa").click(function (e) {
+                e.preventDefault();
+                $("#main").attr("src", $(this).attr("href"));
+            });
+        });
+        $(document).ready(function () {
+            $("#myleavelist").click(function (e) {
                 e.preventDefault();
                 $("#main").attr("src", $(this).attr("href"));
             });

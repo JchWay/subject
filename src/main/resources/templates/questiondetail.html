@@ -54,7 +54,7 @@
                                     <div class="content">
                                         <a class="author" >
                                             <span th:text="${'用户id'+reply.getuId()}">小白</span>
-                                            &nbsp;<span th:text="${' 回复 用户id'+ reply.getParentuId()}" class="m-teal">@ 小红</span>
+                                            &nbsp;<span th:text="${'回复 用户id'+ reply.getParentuId()}" class="m-teal">@小红</span>
                                         </a>
                                         <div class="metadata">
                                             <span class="date" th:text="${#dates.format(reply.getmTime(),'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
@@ -81,13 +81,11 @@
                 <div class="fields">
                     <div class="field m-mobile-wide m-margin-bottom-small">
                         <div class="ui left icon input">
-                            <i class="user icon"></i>
                             <input type="hidden" name="nickname"  th:value="${user.getuId()}">
                         </div>
                     </div>
                     <div class="field m-mobile-wide m-margin-bottom-small">
                         <div class="ui left icon input">
-                            <i class="mail icon"></i>
                             <input type="hidden" name="questionid"  th:value="${question.getqId()}">
                         </div>
                     </div>
@@ -115,24 +113,9 @@
                     prompt: '请输入评论内容'
                 }
                 ]
-            },
-            content: {
-                identifier: 'nickname',
-                rules: [{
-                    type: 'empty',
-                    prompt: '请输入你的大名'
-                }]
-            },
-            type: {
-                identifier: 'email',
-                rules: [{
-                    type: 'email',
-                    prompt: '请填写正确的邮箱地址'
-                }]
             }
         }
     });
-
 
     $(function () {
         $("#comment-container").load(/*[[@{/comment}]]*/"comment/");

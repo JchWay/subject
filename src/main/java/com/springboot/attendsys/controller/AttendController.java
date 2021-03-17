@@ -96,7 +96,16 @@ public class AttendController {
             return "redirect:to_login";
         }
         return "admin/leavelist";
+    }
 
+    @RequestMapping("/myleavelist")
+    public String myleavelist(User user, Model model) {
+        if (user == null) {
+            return "redirect:to_login";
+        } else if (!user.getuRole().equals("user")) {
+            return "redirect:to_login";
+        }
+        return "user/myleavelist";
     }
 
     @RequestMapping("/showleavelist")
@@ -111,6 +120,28 @@ public class AttendController {
         int limit = Integer.parseInt(request.getParameter("limit").trim());//每页显示的记录数
         int page = Integer.parseInt(request.getParameter("page").trim());//当前显示的页码
         List<Leave> leaveList = attendService.getallleavebyuser(uemail, limit, page);
+        int count = attendService.countallleave();
+
+        //LayuiTableUtil 工具类封装了layui的数据表格的返回数据格式 countAdmin:为查询的记录总数
+        LayuiTableUtil<List> list = new LayuiTableUtil<List>("", leaveList, 0, count);
+        if (leaveList != null) {
+            return list;
+        }
+        return null;
+    }
+
+    @RequestMapping("/showmyleavelist")
+    @ResponseBody
+    public LayuiTableUtil<List> showmyleavelist(User user, HttpServletRequest request) {
+        if (user == null) {
+            return null;
+        } else if (!user.getuRole().equals("user")) {
+            return null;
+        }
+        String uemail = user.getuEmail();
+        int limit = Integer.parseInt(request.getParameter("limit").trim());//每页显示的记录数
+        int page = Integer.parseInt(request.getParameter("page").trim());//当前显示的页码
+        List<Leave> leaveList = attendService.getallleavebystudent(uemail, limit, page);
         int count = attendService.countallleave();
 
         //LayuiTableUtil 工具类封装了layui的数据表格的返回数据格式 countAdmin:为查询的记录总数

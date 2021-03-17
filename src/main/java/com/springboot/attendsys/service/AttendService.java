@@ -44,4 +44,8 @@ public class AttendService {
     public int approveleave(int lid, String status) {
         return attendMappper.approveleave(lid,status);
     }
+
+    public List<Leave> getallleavebystudent(String uemail, int pageSize, int pageNow) {
+        return attendMappper.getallleavebystudent(uemail,(pageNow-1)*pageSize,pageSize);
+    }
 }

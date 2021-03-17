@@ -27,6 +27,9 @@ public interface AttendMapper {
     @Select("select * from t_leave where c_id in (select c_id from t_course where c_creater = #{uemail}) order by l_id limit #{limits},#{page}")
     List<Leave> getallleavebyuser(@Param("uemail")String uemail,@Param("limits")int limits, @Param("page") int page);
 
+    @Select("select * from t_leave where u_id in (select u_id from t_user where u_email = #{uemail}) order by l_id limit #{limits},#{page}")
+    List<Leave> getallleavebystudent(@Param("uemail")String uemail,@Param("limits")int limits, @Param("page") int page);
+
     @Select("select count(l_id) from t_leave")
     int countallleave();
 

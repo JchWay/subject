@@ -29,7 +29,7 @@ public class CommentService {
         List<Comment> comments = commentMapper.findByParentIdNull(pid);
         for (Comment comment : comments) {
             int id = comment.getmId();
-            int puid = comment.getParentuId();
+            int puid = comment.getuId();
             List<Comment> childComments = commentMapper.findByParentIdNotNull(id);
             //查询出子评论
             combineChildren(childComments, puid);
