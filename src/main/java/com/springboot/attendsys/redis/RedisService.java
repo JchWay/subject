@@ -32,7 +32,6 @@ public class RedisService {
         } finally {
             returnToPool(jedis);
         }
-
     }
 
     /**
@@ -58,7 +57,33 @@ public class RedisService {
         } finally {
             returnToPool(jedis);
         }
+    }
 
+    public String hget(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            //对key增加前缀，即可用于分类，也避免key重复
+            String str = jedis.hget(prefix.getPrefix(), key);
+            return str;
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+
+    public Boolean hset(KeyPrefix prefix, String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            if (value == null || value.length() <= 0) {
+                return false;
+            }
+            jedis.hset(prefix.getPrefix(), key, value);
+            return true;
+        } finally {
+            returnToPool(jedis);
+        }
     }
 
     /**

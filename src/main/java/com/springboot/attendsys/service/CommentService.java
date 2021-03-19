@@ -1,7 +1,12 @@
 package com.springboot.attendsys.service;
 
+import com.alibaba.fastjson.JSON;
+import com.springboot.attendsys.model.Question;
+import org.apache.commons.lang.StringUtils;
 import com.springboot.attendsys.mapper.CommentMapper;
 import com.springboot.attendsys.model.Comment;
+import com.springboot.attendsys.redis.QuestionKey;
+import com.springboot.attendsys.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,8 @@ import java.util.List;
 public class CommentService {
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private RedisService redisService;
     //存放迭代找出的所有子代的集合
     private List<Comment> tempReplys = new ArrayList<>();
 
@@ -26,7 +33,14 @@ public class CommentService {
     public List<Comment> listComment(int qid) {
         //查询出父节点
         int pid = -1;
-        List<Comment> comments = commentMapper.findByParentIdNull(qid,pid);
+        List<Comment> comments = new ArrayList<>();
+        String result = redisService.hget(QuestionKey.getByIds, String.valueOf(qid).concat(String.valueOf(pid)));
+        if (!StringUtils.isBlank(result)) {
+            //把字符串转换成list
+            comments = JSON.parseArray(result, Comment.class);
+            return comments;
+        }
+        comments = commentMapper.findByParentIdNull(qid, pid);
         for (Comment comment : comments) {
             int id = comment.getmId();
             int puid = comment.getuId();
@@ -36,7 +50,30 @@ public class CommentService {
             comment.setReplyComments(tempReplys);
             tempReplys = new ArrayList<>();
         }
+        if (!comments.isEmpty()) {
+            redisService.hset(QuestionKey.getByIds,String.valueOf(qid).concat(String.valueOf(pid)), JSON.toJSON(comments).toString());
+        }
         return comments;
+    }
+
+    //存储评论信息
+    public int saveComment(Comment comment) {
+        comment.setmTime(new Timestamp(System.currentTimeMillis()));
+        int i = commentMapper.saveComment(comment);
+        int pid = -1;
+        List<Comment> comments = commentMapper.findByParentIdNull(comment.getqId(), pid);
+        for (Comment pcomment : comments) {
+            int id = pcomment.getmId();
+            int puid = pcomment.getuId();
+            List<Comment> childComments = commentMapper.findByParentIdNotNull(id);
+            combineChildren(childComments, puid);
+            pcomment.setReplyComments(tempReplys);
+            tempReplys = new ArrayList<>();
+        }
+        if (!comments.isEmpty()) {
+            redisService.hset(QuestionKey.getByIds,String.valueOf(comment.getqId()).concat(String.valueOf(pid)), JSON.toJSON(comments).toString());
+        }
+        return i;
     }
 
 
@@ -83,9 +120,4 @@ public class CommentService {
         }
     }
 
-    //存储评论信息
-    public int saveComment(Comment comment) {
-        comment.setmTime(new Timestamp(System.currentTimeMillis()));
-        return commentMapper.saveComment(comment);
-    }
 }
