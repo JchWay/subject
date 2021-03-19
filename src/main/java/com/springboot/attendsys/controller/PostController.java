@@ -77,7 +77,7 @@ public class PostController {
     public String displayPostDetails(Model model, @PathVariable("qid") int qid,User user) {
         Question question = questionService.findQuestion(qid);
         model.addAttribute("question", question);
-        List<Comment> comments = commentService.listComment();
+        List<Comment> comments = commentService.listComment(qid);
         model.addAttribute("comments", comments);
         model.addAttribute("user", user);
         return "questiondetail";
@@ -89,7 +89,7 @@ public class PostController {
             comment.setParentMid(comment.getParentComment().getmId());
         }
         commentService.saveComment(comment);
-        List<Comment> comments = commentService.listComment();
+        List<Comment> comments = commentService.listComment(comment.getqId());
         model.addAttribute("comments", comments);
         model.addAttribute("user", user);
         return "questiondetail::commentList";

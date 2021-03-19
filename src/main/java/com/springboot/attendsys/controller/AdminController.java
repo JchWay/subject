@@ -54,7 +54,6 @@ public class AdminController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         if (file.isEmpty()) {
-            map.put("code", 0);
             map.put("msg", "保存失败！");
         }
         String filename = file.getOriginalFilename();
@@ -68,7 +67,6 @@ public class AdminController {
             file.transferTo(dir);
         } catch (IOException e) {
             e.printStackTrace();
-            map.put("code", 0);
             map.put("msg", "保存失败！");
         }
 
@@ -80,11 +78,8 @@ public class AdminController {
 
         int i = courseService.createCourse(creater, coursename, cover, bt, et);
         if (i == 1) {
-            //TODO
-            map.put("code", 1);
             map.put("msg", "创建成功！");
         } else {
-            map.put("code", 0);
             map.put("msg", "创建失败！");  //并发现象 繁忙
         }
         String result = new JSONObject(map).toString();
@@ -165,6 +160,7 @@ public class AdminController {
     }
 
     @RequestMapping("/deletecourse")
+    @ResponseBody
     public String deletecourse(@RequestBody Map o, User user, Model model) {
         if (user == null) {
             return "redirect:to_login";

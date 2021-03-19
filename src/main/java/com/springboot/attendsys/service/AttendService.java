@@ -2,6 +2,7 @@ package com.springboot.attendsys.service;
 
 import com.springboot.attendsys.model.Attendance;
 import com.springboot.attendsys.model.Leave;
+import com.springboot.attendsys.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.springboot.attendsys.mapper.AttendMapper;
@@ -47,5 +48,17 @@ public class AttendService {
 
     public List<Leave> getallleavebystudent(String uemail, int pageSize, int pageNow) {
         return attendMappper.getallleavebystudent(uemail,(pageNow-1)*pageSize,pageSize);
+    }
+
+    public List<User> getpstudent(int cid) {
+        return attendMappper.getpstudent(cid);
+    }
+
+    public List<User> getallstudent(int cid) {
+        return attendMappper.getallstudent(cid);
+    }
+
+    public List<User> getleavestudent(int cid) {
+        return attendMappper.getleavestudent(cid);
     }
 }

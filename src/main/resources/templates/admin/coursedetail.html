@@ -52,7 +52,9 @@
                                     <!--<p >由于众多浏览器已不再支持非安全域的定位请求，为保位成功率和精度，请升级您的站点到HTTPS。</p><-->
                                 </div>
                                 <div class="col-sm-4">
-                                    <button class="layui-btn" th:onclick="|show_attend(${coursedetail.getcId()})|">查看打卡</button>
+                                    <a th:href="'/show_attend/'+${coursedetail.getcId()}" class="layui-btn">
+                                        出勤情况
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -138,24 +140,7 @@
             }
         })
     }
-    show_attend = function (cid) {
-        var param = {
-            "cid": cid
-        };
-        $.ajax({
-            type: "get",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(param),
-            url: "/show_attend",//目标地址
-            success: function (data) {
-                alert(data.msg);
-            },
-            error: function () {
-                alert("接受后台数据失败！");
-            }
-        })
-    }
+
 </script>
 </body>
 </html>

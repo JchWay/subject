@@ -6,7 +6,7 @@
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
     <title>--我创建的课程--</title>
 </head>
-<body>
+<body class="gray-bg">
 
 <table class="layui-hide" id="courseList"></table>
 
@@ -38,8 +38,8 @@
                 {
                     fixed: 'right', title: '操作', width: 150,
                     templet: function (data) {
-                        return "<a href='/user/coursedetail/" + data.cId + "' title='查看' class='layui-btn layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe60b;</icon></a>"+
-                            "<a onclick='javascript:select("+data.cId+")' title='选课' class='layui-btn layui-bg-red layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe67b;</icon></a>";
+                        return "<a href='/user/coursedetail/" + data.cId + "' title='查看' class='layui-btn layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe60b;</icon></a>" +
+                            "<a onclick='javascript:select(" + data.cId + ")' title='选课' class='layui-btn layui-bg-red layui-btn-xs layui-btn-normal'><icon class='layui-icon'>&#xe67b;</icon></a>";
                     }
                 }
             ]],
@@ -52,30 +52,24 @@
 
         });
     });
-
     select = function (cid) {
-        var param={
-            "cid":cid
-        }
+        var param = {
+            "cid": cid
+        };
         $.ajax({
             type: "POST",
             url: "/user/selectcourse",//目标地址
             contentType: "application/json",
-            data:JSON.stringify(param),
+            data: JSON.stringify(param),
             dataType: "json",
             success: function (data) {
-                if (data.code == 1) {
-                    alert(data.msg);
-                }
-                else if (data.code == 0) {
-                    alert(data.msg);
-                }
-
+                alert(data.msg);
             },
             error: function () {
                 alert("接受后台数据失败！");
             }
-        })}
+        })
+    }
 </script>
 </body>
 </html>

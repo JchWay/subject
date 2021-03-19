@@ -3,7 +3,6 @@ package com.springboot.attendsys.model;
 import java.sql.Timestamp;
 
 public class User {
-
     //管理员可编辑属性
     private Integer uId;
     private Timestamp uRegtime;
@@ -142,4 +141,18 @@ public class User {
         this.uDel = uDel;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User that = (User) o;
+
+        return uId.equals(that.uId);
+    }
+
+    @Override
+    public int hashCode() {
+        return uId.hashCode();
+    }
 }

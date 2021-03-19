@@ -275,7 +275,6 @@ public class UserController {
             map.put("msg", "当前时间无法选择该课程！");
         }
 
-
         String result = new JSONObject(map).toString();
         return result;
     }

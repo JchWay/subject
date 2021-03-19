@@ -23,10 +23,10 @@ public class CommentService {
      *
      * @Return: 评论消息
      */
-    public List<Comment> listComment() {
+    public List<Comment> listComment(int qid) {
         //查询出父节点
-        String pid = "-1";
-        List<Comment> comments = commentMapper.findByParentIdNull(pid);
+        int pid = -1;
+        List<Comment> comments = commentMapper.findByParentIdNull(qid,pid);
         for (Comment comment : comments) {
             int id = comment.getmId();
             int puid = comment.getuId();
@@ -38,6 +38,7 @@ public class CommentService {
         }
         return comments;
     }
+
 
     /**
      * @Description: 查询出子评论

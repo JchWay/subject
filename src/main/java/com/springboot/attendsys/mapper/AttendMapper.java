@@ -2,9 +2,8 @@ package com.springboot.attendsys.mapper;
 
 import com.springboot.attendsys.model.Attendance;
 import com.springboot.attendsys.model.Leave;
+import com.springboot.attendsys.model.User;
 import org.apache.ibatis.annotations.*;
-
-import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -38,4 +37,13 @@ public interface AttendMapper {
 
     @Update("update t_leave set l_status = #{status} where l_id = #{lid} ")
     int approveleave(@Param("lid") int lid,@Param("status") String status);
+
+    @Select("select * from t_user where u_id in (select u_id from t_attendance where c_id = #{cid})")
+    List<User> getpstudent(@Param("cid") int cid);
+
+    @Select("select * from t_user where u_id in (select u_id from t_selected where c_id = #{cid})")
+    List<User> getallstudent(@Param("cid")int cid);
+
+    @Select("select * from t_user where u_id in (select u_id from t_leave where c_id = #{cid})")
+    List<User> getleavestudent(@Param("cid")int cid);
 }

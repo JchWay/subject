@@ -5,7 +5,7 @@
     <title>--新建课程--</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
 </head>
-<body>
+<body class="gray-bg">
 <div style="margin-top: 10%;margin-left: 30%;">
     <form class="layui-form layui-form-pane" id="fm" action="" enctype="multipart/form-data">
 
@@ -79,12 +79,7 @@
                 contentType: false,
                 processData: false,
                 success : function(data) {
-                    if(data.code==1){
-                        alert(data.msg());
-                    }
-                    if(data.code==0){
-                        alert(data.msg());
-                    }
+                    alert(data.msg);
                 }
             });
             return false;

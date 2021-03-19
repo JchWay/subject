@@ -16,8 +16,8 @@ public interface CommentMapper {
     @Select("select * from t_comment where parent_mid = #{childId} order by m_time desc")
     List<Comment> findByReplayId(@Param("childId") int childId);
 
-    @Select("select * from t_comment where parent_mid = #{pid} order by m_time desc")
-    List<Comment> findByParentIdNull(@Param("pid")String pid);
+    @Select("select * from t_comment where q_id = #{qid} and parent_mid = #{pid} order by m_time desc")
+    List<Comment> findByParentIdNull(@Param("qid")int qid,@Param("pid")int pid);
 
     @Select("select * from t_comment where parent_mid = #{id} order by m_time desc")
     List<Comment> findByParentIdNotNull(@Param("id") int id);

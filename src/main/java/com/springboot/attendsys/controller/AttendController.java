@@ -9,15 +9,13 @@ import com.springboot.attendsys.util.LayuiTableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +62,8 @@ public class AttendController {
         return result;
     }
 
-    @RequestMapping("/show_attend")
-    public String show_attend(@RequestBody Map o, User user, HttpServletRequest request) {
+    @RequestMapping("/show_attend/{cid}")
+    public String show_attend(@PathVariable("cid") int cid, User user, Model model) {
         if (user == null) {
             return "redirect:to_login";
         } else if (!user.getuRole().equals("admin")) {
@@ -74,18 +72,32 @@ public class AttendController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         //获取课程信息
-        int cid = (Integer) o.get("cid");
         Course coursedetail = courseService.getCourseByCid(cid);
         //判断是否已经发布打卡任务
         if (coursedetail.getcAtime() != null) {
-/*            List<User> pList = attendService.getpstudent(cid);
-            List<User> unpList = attendService.getunpstudent(cid);
-            List<User> leList = attendService.getleaveList(cid);*/
+            List<User> pList = attendService.getpstudent(cid);
+            List<User> allList = attendService.getallstudent(cid);
+            List<User> leList = attendService.getleavestudent(cid);
+            boolean i = true;
+            boolean j = true;
+            if (!pList.isEmpty()) {
+                i = allList.removeAll(pList);
+            }
+            if (!leList.isEmpty()) {
+                j = allList.removeAll(leList);
+            }
+            if (i && j) {
+                List<User> unpList = allList;
+                model.addAttribute("unpList", unpList);
+                model.addAttribute("pList", pList);
+                model.addAttribute("leList", leList);
+            } else {
+                model.addAttribute("msg", "查询失败！");
+            }
         } else {
-            map.put("msg", "尚未发布打卡任务");
+            model.addAttribute("msg", "尚未发布打卡任务!");
         }
-        String result = new JSONObject(map).toString();
-        return result;
+        return "admin/attenddetail";
     }
 
     @RequestMapping("/leavelist")
