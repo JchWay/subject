@@ -1,9 +1,12 @@
 package com.springboot.attendsys.controller;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.springboot.attendsys.model.Attendance;
 import com.springboot.attendsys.model.Course;
 import com.springboot.attendsys.model.Selected;
 import com.springboot.attendsys.model.User;
+import com.springboot.attendsys.rabbitmq.MQSender;
+import com.springboot.attendsys.rabbitmq.PunchMessage;
 import com.springboot.attendsys.redis.RedisService;
 import com.springboot.attendsys.service.AttendService;
 import com.springboot.attendsys.service.CourseService;
@@ -23,6 +26,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/user")
@@ -37,6 +41,10 @@ public class UserController {
     private SelectedService selectedService;
     @Autowired
     private AttendService attendService;
+    @Autowired
+    MQSender sender;
+    //基于令牌桶算法的限流实现类,每秒限制运行50个线程
+    RateLimiter rateLimiter = RateLimiter.create(50);
 
     @RequestMapping("")
     public String manage(User user, Model model) {
@@ -93,6 +101,10 @@ public class UserController {
         }
         Map<String, Object> map = new HashMap<String, Object>();
 
+        if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
+            map.put("msg", "打卡高峰期！请稍后重试！");
+            return new JSONObject(map).toString();
+        }
         //判断是否接收到客户端经纬度，若未接收到则不执行下述逻辑
         if (request.getParameter("lon") != null && request.getParameter("la") != null) {
             double lon = Double.parseDouble(request.getParameter("lon"));
@@ -114,12 +126,11 @@ public class UserController {
                         Attendance attendExsit = attendService.getattendbyids(uid, cid);
                         //判断重复打卡
                         if (attendExsit == null) {
-                            int i = attendService.punch(uid, cid);
-                            if (i == 1) {
-                                map.put("msg", "打卡成功!");
-                            } else {
-                                map.put("msg", "打卡失败！");
-                            }
+                            PunchMessage message = new PunchMessage();
+                            message.setUser(user);
+                            message.setcId(cid);
+                            sender.sendPunchMessage(message);
+                            map.put("msg", "已提交打卡！");
                         } else {
                             map.put("msg", "请勿重复打卡！");
                         }
@@ -135,9 +146,7 @@ public class UserController {
         } else {
             map.put("msg", "获取您的当前位置失败！");
         }
-
-        String result = new JSONObject(map).toString();
-        return result;
+        return new JSONObject(map).toString();
     }
 
     @RequestMapping("/profile")
