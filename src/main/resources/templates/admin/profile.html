@@ -7,7 +7,7 @@
 </head>
 <body class="gray-bg">
 <div style="margin-top: 10%;margin-left: 30%;">
-    <form class="layui-form">
+    <form class="layui-form" id="fm" action="" enctype="multipart/form-data">
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">用户名</label>
@@ -27,6 +27,21 @@
                            th:value="${user.uPassword}"
                            autocomplete="off" class="layui-input">
                 </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传头像</label>
+            <div class="layui-input-block">
+                <input type="file" id="image" name="image"/>
             </div>
         </div>
 
@@ -53,14 +68,17 @@
         var form = layui.form,
             $ = layui.jquery;
         form.on('submit(save)', function (data) {
+            var formData = new FormData($("#fm")[0]);
             $.ajax({
                 //async: false,同步，待请求完毕后再执行后面的代码
-                type: "POST",
                 url: '/user/saveuser',
-                contentType: "application/json",
-                data: JSON.stringify(data.field),
-                dataType: "json",//预期服务器返回的数据类型
-                success: function (data) {
+                type: 'post',
+                data : formData,
+                dataType:'json',
+                cache:false,
+                contentType: false,
+                processData: false,
+                success:function (data) {
                     if (data.code == 0) {
                         alert(data.msg);
                     } else {

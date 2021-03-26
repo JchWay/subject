@@ -30,6 +30,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //Windows下
         registry.addResourceHandler("/cover/**").addResourceLocations("file:D:/attStatic/cover/");
+        registry.addResourceHandler("/photo/**").addResourceLocations("file:D:/attStatic/photo/");
         super.addResourceHandlers(registry);
         /*因为配置了拦截器，所以使用spring-resources-static-locations:配置
         本地静态资源路径无效，重写resourceshandler方法才成功配置 */

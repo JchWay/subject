@@ -18,8 +18,8 @@ public interface UserMapper {
     @Update("update t_user set u_regtime = #{t},u_regip = #{ip} where u_email = #{email}")
     int updateWhenLog(@Param("email")String email, @Param("t")Timestamp t,@Param("ip")String ip);
 
-    @Update("update t_user set u_name = #{username},u_password = #{password} where u_email = #{email}")
-    int updateWhenSaveAdmin(@Param("email")String email, @Param("username")String username,@Param("password")String password);
+    @Update("update t_user set u_name = #{username},u_password = #{password},u_photo = #{photo},u_sex = #{sex} where u_email = #{email}")
+    int updateWhenSaveAdmin(@Param("email")String email, @Param("username")String username,@Param("password")String password,@Param("photo")String photo,@Param("sex")String sex);
 
     @Select("select * from t_user where u_email = #{email}")
     User getByEmail(@Param("email")String email);

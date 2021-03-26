@@ -19,9 +19,12 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -59,16 +62,34 @@ public class UserController {
 
     @PostMapping("/saveuser")
     @ResponseBody
-    public String saveuser(HttpServletRequest request, User user, @RequestBody Map o) {
+    public String saveuser(@RequestParam("image") MultipartFile file, HttpServletRequest request, User user) {
         if (user == null) {
             return "redirect:to_login";
-        } else if (!user.getuRole().equals("user")) {
-            return "redirect:to_login";
         }
-        String name = (String) o.get("username");
-        String pwd = (String) o.get("password");
+        String name = request.getParameter("username");
+        String pwd = request.getParameter("password");
+        String sex = request.getParameter("sex");
 
         Map<String, Object> map = new HashMap<String, Object>();
+        if (file.isEmpty()) {
+            map.put("msg", "保存失败！");
+            return new JSONObject(map).toString();
+        }
+        String filename = file.getOriginalFilename();
+        String path = "D:\\attStatic\\photo";
+        File dir = new File(path + File.separator + filename);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        try {
+            file.transferTo(dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+            map.put("msg", "保存失败！");
+            return new JSONObject(map).toString();
+        }
+
+        String photo = "/photo/" + filename;
         String token = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
@@ -78,7 +99,7 @@ public class UserController {
                 }
             }
         }
-        int i = userService.saveadmin(user, name, pwd, token);
+        int i = userService.saveadmin(user, name, photo, sex, pwd, token);
         if (i == 1) {
             //TODO
             map.put("code", 1);

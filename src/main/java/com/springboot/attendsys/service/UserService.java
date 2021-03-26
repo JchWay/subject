@@ -23,15 +23,16 @@ public class UserService {
 
     public static final String COOKIE_NAME_TOKEN = "token";
 
-    public int saveadmin(User user, String username, String password, String token){
+    public int saveadmin(User user, String username, String photo, String sex, String password, String token) {
         String email = user.getuEmail();
-        int i = userMapper.updateWhenSaveAdmin(email,username,password);
+        int i = userMapper.updateWhenSaveAdmin(email, username, password, photo, sex);
         User newUser = userMapper.getByEmail(email);
         if (newUser != null) {
-            redisService.set(UserKey.token, "" + token , newUser);
+            redisService.set(UserKey.token, "" + token, newUser);
         }
         return i;
     }
+
     public User getByToken(HttpServletResponse response, String token) {
         if (StringUtils.isEmpty(token)) {
             return null;
@@ -44,11 +45,11 @@ public class UserService {
         return user;
     }
 
-    public String login(HttpServletResponse response, User user, Timestamp t, String ip){
+    public String login(HttpServletResponse response, User user, Timestamp t, String ip) {
         String email = user.getuEmail();
-        userMapper.updateWhenLog(email,t,ip);
-        String token = UUID.randomUUID().toString().replace("-","");
-        addCookie(response,token,user);
+        userMapper.updateWhenLog(email, t, ip);
+        String token = UUID.randomUUID().toString().replace("-", "");
+        addCookie(response, token, user);
         return token;
     }
 
@@ -75,12 +76,12 @@ public class UserService {
         return userMapper.getById(uid);
     }
 
-    public List<User> getAllUser(int pageSize,int pageNow) {
-        List<User> list = userMapper.getAllUser((pageNow-1)*pageSize,pageSize);
+    public List<User> getAllUser(int pageSize, int pageNow) {
+        List<User> list = userMapper.getAllUser((pageNow - 1) * pageSize, pageSize);
         return list;
     }
 
-    public int countAllUser(){
+    public int countAllUser() {
         int count = userMapper.countAllUser();
         return count;
     }

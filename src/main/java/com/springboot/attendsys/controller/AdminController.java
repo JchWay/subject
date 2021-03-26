@@ -55,10 +55,11 @@ public class AdminController {
         Map<String, Object> map = new HashMap<String, Object>();
         if (file.isEmpty()) {
             map.put("msg", "保存失败！");
+            return new JSONObject(map).toString();
         }
         String filename = file.getOriginalFilename();
         String path = "D:\\attStatic\\cover";
-        System.out.println(path);
+        //System.out.println(path);
         File dir = new File(path + File.separator + filename);
         if (!dir.exists()) {
             dir.mkdir();
@@ -68,6 +69,7 @@ public class AdminController {
         } catch (IOException e) {
             e.printStackTrace();
             map.put("msg", "保存失败！");
+            return new JSONObject(map).toString();
         }
 
         String creater = user.getuName();
@@ -82,8 +84,7 @@ public class AdminController {
         } else {
             map.put("msg", "创建失败！");  //并发现象 繁忙
         }
-        String result = new JSONObject(map).toString();
-        return result;
+        return new JSONObject(map).toString();
     }
 
     @RequestMapping("/profile")
