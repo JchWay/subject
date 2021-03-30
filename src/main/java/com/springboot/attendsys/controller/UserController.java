@@ -138,7 +138,7 @@ public class UserController {
                 double tlon = coursedetail.getcLon();
                 double tla = coursedetail.getcLa();
                 //判断是否在打卡范围内
-                if (DistanceUtil.GetDistance(tlon, tla, lon, la) <= 65) {
+                if (DistanceUtil.GetDistance(tlon, tla, lon, la) <= 20) {
                     long pt = System.currentTimeMillis() / 1000;
                     long at = coursedetail.getcAtime().getTime() / 1000;
                     //判断是否在打卡时间内
