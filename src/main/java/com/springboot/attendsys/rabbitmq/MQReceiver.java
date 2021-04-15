@@ -36,10 +36,8 @@ public class MQReceiver {
     public void receive(String message){
         log.info("receive message:"+message);
         PunchMessage m = RedisService.stringToBean(message, PunchMessage.class);
-        User user = m.getUser();
         int cId = m.getcId();
-        int uId = user.getuId();
-
+        int uId = m.getuId();
         attendService.punch(uId,cId);
     }
 

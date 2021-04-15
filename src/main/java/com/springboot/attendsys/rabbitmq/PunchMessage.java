@@ -5,15 +5,15 @@ import com.springboot.attendsys.model.User;
 
 public class PunchMessage {
 
-    private User user;
+    private int uId;
     private int cId;
 
-    public User getUser() {
-        return user;
+    public int getuId() {
+        return uId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setuId(int uId) {
+        this.uId = uId;
     }
 
     public int getcId() {

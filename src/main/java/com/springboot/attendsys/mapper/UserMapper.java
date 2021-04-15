@@ -15,7 +15,7 @@ public interface UserMapper {
             "(#{uName},#{uPassword},#{uEmail},#{uRegtime},#{uRegip},#{uRole})")
     int addUser(User user);
 
-    @Update("update t_user set u_regtime = #{t},u_regip = #{ip} where u_email = #{email}")
+    @Update("update t_user set u_lastlogtime = #{t},u_lastlogip = #{ip} where u_email = #{email}")
     int updateWhenLog(@Param("email")String email, @Param("t")Timestamp t,@Param("ip")String ip);
 
     @Update("update t_user set u_name = #{username},u_password = #{password},u_photo = #{photo},u_sex = #{sex} where u_email = #{email}")

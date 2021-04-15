@@ -4,32 +4,67 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>--用户登录/注册--</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <style type="text/css">
+        #container {
+            width: 420px;
+            height: 320px;
+            min-height: 320px;
+            max-height: 320px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            padding: 20px;
+            z-index: 130;
+            border-radius: 8px;
+            background-color: #d1cfcf;
+            box-shadow: 0 3px 18px rgba(85, 83, 83, 0.5);
+            font-size: 16px;
+        }
+        .layui-form-item{
+            margin-left: 10px;
+        }
+        .layui-input{
+            border-radius: 5px;
+            width: 250px;
+            height: 40px;
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body class="gray-bg">
 <div style="margin-top: 10%;margin-left: 30%;">
     <form class="layui-form">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">用户邮箱</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+        <div id="container">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend>AttendSYS用户登录</legend>
+            </fieldset>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户邮箱</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
-                       autocomplete="off"
-                       class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="login">立即登录</button>
-                <a th:href="@{/register}">----新用户注册</a>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="login">立即登录</button>
+                    <a th:href="@{/register}">----新用户注册</a>
+                </div>
             </div>
         </div>
     </form>

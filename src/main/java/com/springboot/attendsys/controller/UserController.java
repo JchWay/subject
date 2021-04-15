@@ -120,6 +120,7 @@ public class UserController {
         } else if (!user.getuRole().equals("user")) {
             return "redirect:to_login";
         }
+    //public String punch(HttpServletRequest request) {
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
@@ -138,17 +139,19 @@ public class UserController {
                 double tlon = coursedetail.getcLon();
                 double tla = coursedetail.getcLa();
                 //判断是否在打卡范围内
-                if (DistanceUtil.GetDistance(tlon, tla, lon, la) <= 20) {
+                if (DistanceUtil.GetDistance(tlon, tla, lon, la) <= 25) {
                     long pt = System.currentTimeMillis() / 1000;
                     long at = coursedetail.getcAtime().getTime() / 1000;
                     //判断是否在打卡时间内
-                    if ((pt >= at) && (pt <= at + 18000)) {
+                    if ((pt >= at) && (pt <= at + 36000)) {
+                        //todo 测试环境需要修改了uid获取方式
+                        //int uid = Integer.valueOf(request.getParameter("uid"));
                         int uid = user.getuId();
                         Attendance attendExsit = attendService.getattendbyids(uid, cid);
                         //判断重复打卡
                         if (attendExsit == null) {
                             PunchMessage message = new PunchMessage();
-                            message.setUser(user);
+                            message.setuId(uid);
                             message.setcId(cid);
                             sender.sendPunchMessage(message);
                             map.put("msg", "已提交打卡！");

@@ -7,6 +7,10 @@
 </head>
 <body class="gray-bg">
 <div style="margin-top: 10%;margin-left: 30%;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>个人档案信息</legend>
+    </fieldset>
+
     <form class="layui-form" id="fm" action="" enctype="multipart/form-data">
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -73,12 +77,12 @@
                 //async: false,同步，待请求完毕后再执行后面的代码
                 url: '/user/saveuser',
                 type: 'post',
-                data : formData,
-                dataType:'json',
-                cache:false,
+                data: formData,
+                dataType: 'json',
+                cache: false,
                 contentType: false,
                 processData: false,
-                success:function (data) {
+                success: function (data) {
                     if (data.code == 0) {
                         alert(data.msg);
                     } else {
