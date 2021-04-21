@@ -9,7 +9,7 @@
     <link th:href="@{/css/animate.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <title>--我创建的课程--</title>
-    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>学生信息</h5>
@@ -35,14 +35,15 @@
                     <div>
                         <div class="ibox-content profile-content">
                             <h4 th:text="'学生名称:'+${studentdetail.getuName()}"></h4>
+                            <h4 th:text="'学生性别:'+${studentdetail.getuSex()}"></h4>
                             <h4 th:text="'学生邮箱:'+${studentdetail.getuEmail()}"></h4>
-                            <h4 th:text="'注册时间:'+${studentdetail.getuRegtime()}"></h4>
-                            <h4 th:text="'ip地址:'+${studentdetail.getuRegip()}"></h4>
+                            <h4 th:text="'注册地址:'+${studentdetail.getuRegip()}"></h4>
+                            <h4 th:text="'登录地址:'+${studentdetail.getuLastlogip()}"></h4>
+                            <h4 th:text="'登录时间:'+${studentdetail.getuLastlogtime()}"></h4>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

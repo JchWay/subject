@@ -53,10 +53,13 @@ public class PostController {
     public String updatePost(@ModelAttribute("question") Question question, User user) {
         //管理员和提出问题的用户可以对问题进行修改
         if (user.getuRole().equals("admin") || question.getuId() == user.getuId()) {
-            questionService.updateQuestion(question);
+            update(question);
             return "redirect:/posts";
         }
         return "redirect:/posts";
+    }
+    public synchronized void update(Question question){
+        questionService.updateQuestion(question);
     }
 
     /*

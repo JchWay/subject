@@ -46,8 +46,8 @@ public class UserController {
     private AttendService attendService;
     @Autowired
     MQSender sender;
-    //基于令牌桶算法的限流实现类,每秒限制运行50个线程
-    RateLimiter rateLimiter = RateLimiter.create(50);
+    //基于令牌桶算法的限流实现类,每秒限制运行200个线程,这是由lbs的tps决定的
+    RateLimiter rateLimiter = RateLimiter.create(200);
 
     @RequestMapping("")
     public String manage(User user, Model model) {
@@ -120,7 +120,7 @@ public class UserController {
         } else if (!user.getuRole().equals("user")) {
             return "redirect:to_login";
         }
-    //public String punch(HttpServletRequest request) {
+/*    public String punch(HttpServletRequest request) {*/
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
@@ -143,9 +143,9 @@ public class UserController {
                     long pt = System.currentTimeMillis() / 1000;
                     long at = coursedetail.getcAtime().getTime() / 1000;
                     //判断是否在打卡时间内
-                    if ((pt >= at) && (pt <= at + 36000)) {
+                    if ((pt >= at) && (pt <= at + 360000)) {
                         //todo 测试环境需要修改了uid获取方式
-                        //int uid = Integer.valueOf(request.getParameter("uid"));
+                        /*int uid = Integer.valueOf(request.getParameter("uid"));*/
                         int uid = user.getuId();
                         Attendance attendExsit = attendService.getattendbyids(uid, cid);
                         //判断重复打卡
@@ -154,6 +154,7 @@ public class UserController {
                             message.setuId(uid);
                             message.setcId(cid);
                             sender.sendPunchMessage(message);
+                            /*attendService.punch(uid,cid);*/
                             map.put("msg", "已提交打卡！");
                         } else {
                             map.put("msg", "请勿重复打卡！");
