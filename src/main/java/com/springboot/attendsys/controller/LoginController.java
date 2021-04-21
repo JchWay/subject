@@ -2,6 +2,7 @@ package com.springboot.attendsys.controller;
 
 import com.springboot.attendsys.model.User;
 import com.springboot.attendsys.service.UserService;
+import com.springboot.attendsys.util.Base64Util;
 import com.springboot.attendsys.util.IpUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +50,12 @@ public class LoginController {
         Timestamp t = new Timestamp(System.currentTimeMillis());
 
         //解析json字符串
-        String pwd = (String) o.get("password");
+        String pwd = null;
+        try {
+            pwd = Base64Util.EncodeByBase64((String) o.get("password"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String email = (String) o.get("email");
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -85,7 +92,12 @@ public class LoginController {
         Timestamp t = new Timestamp(System.currentTimeMillis());
         //解析json字符串
         String name = (String) o.get("username");
-        String pwd = (String) o.get("password");
+        String pwd = null;
+        try {
+            pwd = Base64Util.EncodeByBase64((String) o.get("password"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String email = (String) o.get("email");
 
         Map<String, Object> map = new HashMap<String, Object>();
